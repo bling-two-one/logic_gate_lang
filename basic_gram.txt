@@ -14,7 +14,7 @@ n!A
 A의 n의 보수를 구함
 (A를 반전후 bin(n)을 A에 더함)
 
-AND, OR, XOR, NAND, NOR
+AND, OR, XOR, NAND, NOR 등
 
 코드 블럭
 1. A

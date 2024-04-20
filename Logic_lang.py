@@ -13,7 +13,7 @@ class Logic_Lexer :
     def lex(self) -> List[Token]:
         while not self.is_end():
             self.start = self.current
-            self.scan_token()
+            self.scan_tokens()
 
         self.tokens.append(Token(Tokens_type.EOF, ''))
 
@@ -44,3 +44,14 @@ class Logic_Lexer :
     def advance(self) -> str :
         self.current += 1
         return self.source[self.current - 1]
+    
+    def run(code: str) -> None:
+        lexer = Logic_Lexer(code)
+
+        lexer.tokens = lexer.lex()
+        print(lexer)
+
+    @staticmethod
+    def run_file(filename: str) -> None:
+        with open(filename, 'r') as f:
+                Logic_Lexer.run(f.read())

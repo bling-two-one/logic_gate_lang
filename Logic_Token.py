@@ -9,6 +9,8 @@ class Tokens_type(Enum) :
     NOR = auto()
     NOT = auto()
     
+    SHIFT = auto()
+    
     IDENTIFIER = auto()
     EQUAL = auto()
     

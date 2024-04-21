@@ -1,7 +1,5 @@
-from Logic_lang import Logic_Lexer
+import Logic_lang
 
-lexer = Logic_Lexer('OR')
-
-tokens = lexer.lex()
-
-print('\n'.join(map(str, tokens)))
+s = Logic_lang.token_collect(['AND'])
+s.scan()
+print(s.tokens)

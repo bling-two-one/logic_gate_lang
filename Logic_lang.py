@@ -1,57 +1,73 @@
-from Logic_Token import Token, Tokens_type
-from typing import Optional, List
 
-#코드를 토큰 단위로 스캔
-class Logic_Lexer :
-    def __init__(self, source : str) -> None:
-        self.source = source    # 소스 코드
-        self.tokens = []        # 파싱된 토큰
-        self.start = 0			# 토큰의 시작
-        self.current = 0		# 토큰의 끝
-        self.line = 1			# 라인
-    
-    def lex(self) -> List[Token]:
-        while not self.is_end():
-            self.start = self.current
-            self.scan_tokens()
+from Logic_Token import Tokens_type
+import re
 
-        self.tokens.append(Token(Tokens_type.EOF, ''))
+is_shift = re.compile('>{2}|<{2}[0-8]')
 
-        return self.tokens
+class token_collect :
+    def __init__(self, source : list) -> None:
+        self.source = source
+        self.tokens = []
+        self.current = 0
+        self.start = 0
+        self.end = len(source)
     
-    def scan_tokens(self) :
-        ch = self.advance()
-        
-        if ch == 'AND' :
-            self.add_token(Tokens_type.AND)
-        elif ch == 'OR' :
-            self.add_token(Tokens_type.OR)
-        elif ch == 'XOR' :
-            self.add_token(Tokens_type.XOR)
-        elif ch == 'NAND' :
-            self.add_token(Tokens_type.NAND)
-        elif ch == 'NOR' :
-            self.add_token(Tokens_type.NOR)
-        elif ch == 'NOT' :
-            self.add_token(Tokens_type.NOT)
-        
-    def add_token(self) :
-        self.tokens.append(Token(Tokens_type, self.source[self.start: self.current]))
+    def add_token(self, token : Tokens_type) :
+        self.tokens.append(token)
     
-    def is_end(self) -> bool:
-        return self.current >= len(self.source)
-    
-    def advance(self) -> str :
+    def next_line(self) :
         self.current += 1
-        return self.source[self.current - 1]
     
-    def run(code: str) -> None:
-        lexer = Logic_Lexer(code)
-
-        lexer.tokens = lexer.lex()
-        print(lexer)
-
-    @staticmethod
-    def run_file(filename: str) -> None:
-        with open(filename, 'r') as f:
-                Logic_Lexer.run(f.read())
+    def is_end(self) :
+        if self.current == self.end :
+            return True
+        elif self.current < self.end :
+            return False    
+        
+    def scan(self) :
+        code = self.source[self.current]
+        
+        if code == 'AND' :
+            self.add_token(Tokens_type.AND)
+            self.next_line()
+            
+        elif code == 'OR' :
+            self.add_token(Tokens_type.OR)
+            self.next_line()
+            
+        elif code == 'XOR' :
+            self.add_token(Tokens_type.XOR)
+            self.next_line()
+            
+        elif code == 'NAND' :
+            self.add_token(Tokens_type.NAND)
+            self.next_line()
+            
+        elif code == 'NOR' :
+            self.add_token(Tokens_type.NOR)
+            self.next_line()
+            
+        elif code == 'NOT' :
+            self.add_token(Tokens_type.NOT)
+            self.next_line()
+            
+        elif bool(is_shift.match(code)) :
+            if bool(re.match('<{2}[0-8]', code)) :
+                self.add_token([Tokens_type.L_SHIFT, code[-1]])
+                self.next_line()
+                
+            elif bool(re.match('>{2}[0-8]', code)) :
+                self.add_token([Tokens_type.R_SHIFT, code[-1]])
+                self.next_line()
+                
+        elif bool(re.match('[0-1]', code)) :
+            self.add_token([Tokens_type.VALUE, code])
+            self.next_line()
+        
+        elif bool(re.match('^=[a-zA-Z][0-9]*', code)) :
+            self.add_token([Tokens_type.CALCUL_EQUAL, code[1:]])
+            self.next_line()
+            
+        elif bool(re.match('^[^0-9][a-zA-Z0-9]*=[0-1]{1,8}$', code)) :
+            self.add_token([Tokens_type.ASSIGN_EQUAL, code.split('=')[0], code.split('=')[2]])
+            self.next_line()

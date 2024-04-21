@@ -1,11 +1,3 @@
 import Logic_lang
 
-s = Logic_lang.token_collect(['A=101001',
-                              'B=110101',
-                              '101010',
-                              'AND',
-                              '10100'])
-while not s.is_end() :
-    s.scan()
-    
-print(s.tokens)
+Logic_lang.run('C:\\Users\\chris\\OneDrive\\바탕 화면\\Git_Hub\\logic_gate_lang\\test_code.txt')

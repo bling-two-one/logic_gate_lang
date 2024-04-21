@@ -71,3 +71,17 @@ class token_collect :
         elif bool(re.match('^[^0-9][a-zA-Z0-9]*=[0-1]{1,8}$', code)) :
             self.add_token([Tokens_type.ASSIGN_EQUAL, code.split('=')[0], code.split('=')[1]])
             self.next_line()
+
+def run(source_file) :
+    file =  open(source_file, 'r')
+    with open(source_file, 'r') as file:
+        codes = file.readlines()
+    codes = list(map(lambda s: s.strip(), codes))
+    
+    code_analyze = token_collect(codes)
+    
+    while not code_analyze.is_end() :
+        code_analyze.scan()
+    
+    print(code_analyze.tokens)
+    

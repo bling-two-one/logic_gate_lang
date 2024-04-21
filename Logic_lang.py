@@ -60,7 +60,7 @@ class token_collect :
                 self.add_token([Tokens_type.R_SHIFT, code[-1]])
                 self.next_line()
                 
-        elif bool(re.match('[0-1]', code)) :
+        elif bool(re.match('[0-1]{1,8}', code)) :
             self.add_token([Tokens_type.VALUE, code])
             self.next_line()
         
@@ -69,5 +69,5 @@ class token_collect :
             self.next_line()
             
         elif bool(re.match('^[^0-9][a-zA-Z0-9]*=[0-1]{1,8}$', code)) :
-            self.add_token([Tokens_type.ASSIGN_EQUAL, code.split('=')[0], code.split('=')[2]])
+            self.add_token([Tokens_type.ASSIGN_EQUAL, code.split('=')[0], code.split('=')[1]])
             self.next_line()

@@ -26,7 +26,7 @@ class token_collect :
         
     def scan(self) :
         code = self.source[self.current]
-        
+
         if code == 'AND' :
             self.add_token(Tokens_type.AND)
             self.next_line()
@@ -71,17 +71,19 @@ class token_collect :
         elif bool(re.match('^[^0-9][a-zA-Z0-9]*=[0-1]{1,8}$', code)) :
             self.add_token([Tokens_type.ASSIGN_EQUAL, code.split('=')[0], code.split('=')[1]])
             self.next_line()
+        
 
 def run(source_file) :
-    file =  open(source_file, 'r')
-    with open(source_file, 'r') as file:
-        codes = file.readlines()
-    codes = list(map(lambda s: s.strip(), codes))
+    file = open(source_file, 'r')
     
+    codes = file.readlines()
+    codes = [v.strip() for v in codes if v.strip()]
+
     code_analyze = token_collect(codes)
     
-    while not code_analyze.is_end() :
-        code_analyze.scan()
+    for i in codes :
+            code_analyze.scan()
     
+    print(codes)
     print(code_analyze.tokens)
     

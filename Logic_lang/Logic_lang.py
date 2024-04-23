@@ -1,6 +1,7 @@
 
-from Logic_Token import Tokens_type
+from Logic_lang.Logic_Token import Tokens_type
 import re
+import Logic_lang.Logic_inter as LT
 
 is_shift = re.compile('>{2}|<{2}[0-8]')
 
@@ -17,7 +18,7 @@ class token_collect :
     
     def next_line(self) :
         self.current += 1
-    
+
     def is_end(self) :
         if self.current == self.end :
             return True
@@ -53,15 +54,15 @@ class token_collect :
             
         elif bool(is_shift.match(code)) :
             if bool(re.match('<{2}[0-8]', code)) :
-                self.add_token([Tokens_type.L_SHIFT, code[-1]])
+                self.add_token([Tokens_type.L_SHIFT, int(code[-1])])
                 self.next_line()
                 
             elif bool(re.match('>{2}[0-8]', code)) :
-                self.add_token([Tokens_type.R_SHIFT, code[-1]])
+                self.add_token([Tokens_type.R_SHIFT,int(code[-1])])
                 self.next_line()
                 
         elif bool(re.match('[0-1]{1,8}', code)) :
-            self.add_token([Tokens_type.VALUE, code])
+            self.add_token([Tokens_type.VALUE, int(code)])
             self.next_line()
         
         elif bool(re.match('^=[a-zA-Z][0-9]*', code)) :
@@ -73,7 +74,7 @@ class token_collect :
             self.next_line()
         
 
-def run(source_file) :
+def run(source_file : str) -> list :
     file = open(source_file, 'r')
     
     codes = file.readlines()
@@ -83,7 +84,6 @@ def run(source_file) :
     
     for i in codes :
             code_analyze.scan()
-    
-    print(codes)
-    print(code_analyze.tokens)
+
+    return LT.interpreter(code_analyze.tokens)
     

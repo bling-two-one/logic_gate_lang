@@ -54,15 +54,15 @@ class token_collect :
             
         elif bool(is_shift.match(code)) :
             if bool(re.match('<{2}[0-8]', code)) :
-                self.add_token([Tokens_type.L_SHIFT, int(code[-1])])
+                self.add_token([Tokens_type.L_SHIFT, code[-1]])
                 self.next_line()
                 
             elif bool(re.match('>{2}[0-8]', code)) :
-                self.add_token([Tokens_type.R_SHIFT,int(code[-1])])
+                self.add_token([Tokens_type.R_SHIFT, code[-1]])
                 self.next_line()
                 
         elif bool(re.match('[0-1]{1,8}', code)) :
-            self.add_token([Tokens_type.VALUE, int(code)])
+            self.add_token([Tokens_type.VALUE, code])
             self.next_line()
         
         elif bool(re.match('^=[a-zA-Z][0-9]*', code)) :
@@ -74,7 +74,7 @@ class token_collect :
             self.next_line()
         
 
-def run(source_file : str) -> list :
+def run(source_file : str, is_token_get : bool = True) -> list :
     file = open(source_file, 'r')
     
     codes = file.readlines()
@@ -85,5 +85,8 @@ def run(source_file : str) -> list :
     for i in codes :
             code_analyze.scan()
 
-    return LT.interpreter(code_analyze.tokens)
+    if is_token_get == True :
+        return code_analyze.tokens
+    else :
+        return LT.interpreter(code_analyze.tokens)
     

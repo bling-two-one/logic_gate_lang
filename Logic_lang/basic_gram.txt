@@ -19,7 +19,7 @@ AND, OR, XOR, NAND, NOR 등
 4. OR
 5. C
 6. = D
-7.
+7.1
 8. E = 1010100101
 9.
 10 E
@@ -36,13 +36,6 @@ AND, OR, XOR, NAND, NOR 등
 10 : E와 D를 AND연산 후 F에 저장
 
 
-
-
-함수
-func func_name(A,B,C) :
-	코드
-
-A, B, C 인자를 받아서 연산후 리턴
 
 예시 코드 :
 (반가산기)

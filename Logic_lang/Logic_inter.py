@@ -51,8 +51,21 @@ def NOR_calc(result : list)  -> list:
 
         return result_
 
-#def XOR_calc(result : list) -> list :
-      
+def XOR_calc(result : list) -> list :
+        result_ = result
+        temp_calc = ''
+        temp_addr = result_.index(LT.Tokens_type.XOR)
+        for binary_ in range(len(result_[temp_addr + 1][1])) :
+            if int(result_[temp_addr + 1][1][binary_]) != int(result_[temp_addr - 1][1][binary_]) :
+                temp_calc += '1'
+            else :
+                 temp_calc += '0'
+        result_[temp_addr] = [LT.Tokens_type.VALUE, temp_calc]
+        del result_[temp_addr + 1]
+        del result_[temp_addr - 1]
+
+        return result_
+
 
 def interpreter(tokens_get : list) :
 
@@ -75,5 +88,9 @@ def interpreter(tokens_get : list) :
                 result_ = NOR_calc(result_)
                 interpreter(result_)
                 continue
+            elif token_analyze == LT.Tokens_type.XOR :
+                 result_ = XOR_calc(result_)
+                 interpreter(result_)
+                 continue
     return result_
             
